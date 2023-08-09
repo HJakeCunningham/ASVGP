@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 import numpy as np
 import tensorflow as tf
 from scipy.sparse import csr_matrix
-from bandgp.utils import repeat_and_pad_32
 
 class SplineBasis(ABC):
     """ 

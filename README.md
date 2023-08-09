@@ -28,24 +28,30 @@ conda create -n venv python=3.7
 conda activate venv
 ```
 
+2. Install tensorflow=2.4
+```bash
+pip install tensorflow==2.4
+```
+
 3. Clone `banded_matrices` package
 ```bash
-git clone https://github.com/secondmind-labs/banded_matrices.git
+git clone --branch awav/fix-banded-hashable-tensor https://github.com/secondmind-labs/banded_matrices.git
 cd banded_matrices
 ```
 
-4. Switch branch to `awav/fix-banded-hashable-tensor`
-```bash
-git fetch
-git checkout -b origin/awav/fix-banded-hashable-tensor 
-```
-
-5. Build python `banded_matrices` package (Note that his requires gcc version 7)
+4. Build python `banded_matrices` package (Note that his requires gcc version 7)
 ```bash
 python setup.py sdist bdist_wheel
 ```
 
-6. Install `banded_matrices` package
+5. Install `banded_matrices` package
 ```bash
-pip install dist/banded_matrices-0.0.7-*.whl
+pip install dist/banded_matrices-0.0.6-*.whl
 ```
+
+6. Install remaining requirements
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
+

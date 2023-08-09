@@ -1,0 +1,6 @@
+README.md
+setup.py
+asvgp.egg-info/PKG-INFO
+asvgp.egg-info/SOURCES.txt
+asvgp.egg-info/dependency_links.txt
+asvgp.egg-info/top_level.txt
