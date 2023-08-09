@@ -20,7 +20,7 @@ def sparse_tile(A, repeats):
     data = np.tile(A.data, repeats)
     row = np.zeros(data.shape)
     for i in range(0, repeats):
-        row[i*n:(i+1)*n] = A.row + i*repeats
+        row[i*n:(i+1)*n] = A.row + i*A.shape[0]
     col = np.tile(A.col, repeats)
     return sparse.csr_matrix((data, (row, col)), shape=(A.shape[0] * repeats, A.shape[1]))
 
