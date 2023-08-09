@@ -1,5 +1,7 @@
 # Actually Sparse Variational Gaussian Processes
 
+![image](./images/sparse_matrices.png)
+
 This repository includes the official implementation of [Actually Sparse Variational Gaussian processes](https://arxiv.org/abs/2304.05091), a sparse variational Gaussian process approximation, that utilises sparse linear algebra to efficiently scale low-dimensional Matern Gaussian processes to large numbers of datapoints.
 
 Our implementation is built upon [GPFlow](https://github.com/GPflow/GPflow) and [banded_matrices](https://github.com/secondmind-labs/banded_matrices) packages. 
