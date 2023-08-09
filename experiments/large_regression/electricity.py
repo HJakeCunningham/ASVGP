@@ -134,9 +134,6 @@ for m in [1000]:
         opt.minimize(model4.training_loss, variables=model4.trainable_variables)
         t4b = time.time()
         y_pred, _ = model4.predict_f(X_test)
-        # y_pred = np.zeros([X_test.shape[0], 1])
-        # for k in range(0, X_test.shape[0], 100_000):
-        #     y_pred[k:k+100_000], _ = model4.predict_y(X_test[k:k+100_000])
         t4c = time.time()
         band_nlpd.append(-np.mean(model4.predict_log_density((X_test, y_test)).numpy()))
         band_mse.append(mean_squared_error(y_test, y_pred))
@@ -171,20 +168,7 @@ for m in [1000]:
         'Time pred (mean)' : [np.mean(svgp_pred_time), np.mean(band_pred_time)]
     }
 
-    # results = {
-    #     'Model' : ['Band'],
-    #     'NLPD (mean)' : [np.mean(band_nlpd)],
-    #     'NLPD (std)' : [np.std(band_nlpd)],
-    #     'MSE (mean)' : [np.mean(band_mse)],
-    #     'MSE (std)' : [np.std(band_mse)],
-    #     'Time opt (mean)' : [np.mean(band_opt_time)],
-    #     'Time pred (mean)' : [np.mean(band_pred_time)],
-    #     'Time total (mean)' : [np.mean(band_total_time)]
-    # }
-
     df = pd.DataFrame(results)
-    df.to_csv('results_svgp_band_m{}.csv'.format(m))
-
     print('')
     print(df)
     print('')

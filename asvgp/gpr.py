@@ -72,7 +72,6 @@ class GPR_1d(gpflow.models.GPModel, gpflow.models.InternalDataTrainingLossMixin)
         P = self.KufKfu / sigma2 + Kuu
         L_P = banded.cholesky_band(P)
         log_det_P = tf.reduce_sum(tf.math.log(tf.square(L_P[0,:])))
-        # c = tf.linalg.banded_triangular_solve(utils.band_to_tfband(L_P), self.Kuf_y) / sigma2
         c = banded.solve_triang_mat(L_P, self.Kuf_y) / sigma2
 
         # Compute bound on log marginal likelihood
@@ -90,33 +89,6 @@ class GPR_1d(gpflow.models.GPModel, gpflow.models.InternalDataTrainingLossMixin)
         return elbo
 
     def predict_f(self, Xnew, full_cov=False, full_output_cov=False, batch=False):
-        # assert not full_output_cov
-
-        # Kuu = self.inducing_features.make_Kuu(self.kernel)
-        # L_Kuu = banded.cholesky_band(Kuu)
-        # sigma2 = self.likelihood.variance
-
-        # P = self.KufKfu / sigma2 + Kuu
-        # L_P = banded.cholesky_band(P)
-        # c = tf.linalg.banded_triangular_solve(utils.band_to_tfband(L_P), self.Kuf_y) / sigma2
-
-        # Kus = self.inducing_features.make_Kuf(Xnew).todense()
-        # tmp = tf.linalg.banded_triangular_solve(utils.band_to_tfband(L_P), Kus)
-        # mean = tf.matmul(tf.transpose(tmp), c)
-        # KiKus = banded.chol_solve_band_mat(L_Kuu, Kus)
-
-        # if full_cov:
-        #     var = self.kernel(Xnew)
-        #     var += tf.matmul(tf.transpose(tmp), tmp)
-        #     var -= tf.matmul(tf.transpose(KiKus), Kus)
-        #     # shape = tf.stack([1, 1, tf.shape(self.y)[1]])
-        #     # var = tf.tile(tf.expand_dims(var, 2), shape)
-        # else:
-        #     var = self.kernel.K_diag(Xnew)
-        #     var += tf.reduce_sum(tf.square(tmp), 0)
-        #     var -= tf.reduce_sum(KiKus * Kus, 0)
-        #     shape = tf.stack([1, tf.shape(self.Kuf_y)[1]])
-        #     var = tf.tile(tf.expand_dims(var, 1), shape)
         assert not full_output_cov
 
         def predict_f_per_batch(Xnew):
@@ -385,39 +357,6 @@ class GPR_kron(gpflow.models.GPModel, gpflow.models.InternalDataTrainingLossMixi
         var = tf.expand_dims(var, 1)
 
         return mean, var
-
-
-        
-
-
-
-if __name__ == "__main__":
-
-    import asvgp.basis as basis
-    import matplotlib.pyplot as plt
-
-    dim = 2
-    kernels = [gpflow.kernels.Matern32() for d in range(dim)]
-    bases = [basis.B3Spline(0, 1, 2000) for d in range(dim)]
-
-    X = np.random.uniform(0, 1, (1_000_000, 2))
-    Xnew = np.random.uniform(0, 1, (10_000, 2))
-    y = np.random.uniform(0, 1, (1_000_000, 1))
-
-    print('made it')
-
-    t = time.time()
-    # model = GPR_kron((X, y), kernels, bases)
-    model = GPR_additive((X,y), kernels, bases)
-    print('Precompute = {}'.format(time.time()-t))
-
-    mean, var = model.predict_f(Xnew)
-
-    
-
-    # fig = plt.figure(figsize=(8,5))
-    # plt.imshow(model.KufKfu.todense())
-    # plt.savefig('KufKfu.png', dpi=300)
 
 
 
